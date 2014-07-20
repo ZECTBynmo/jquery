@@ -3939,12 +3939,36 @@ function Sizzle( selector, context, results, seed ) {
 
 			// Speed-up: Sizzle("TAG")
 			} else if ( match[2] ) {
-				push.apply( results, slice.call(context.getElementsByTagName( selector ), 0) );
+				// Make sure we don't call Array.push with more arguments than browsers
+				// can handle, by breaking the call into palateable chunks if necessary
+				var maxArguments = 50000,
+					matchingElements = slice.call(context.getElementsByTagName( selector ), 0);
+
+				if ( matchingElements != undefined && matchingElements.length != undefined &&
+					matchingElements.length > maxArguments ) {
+					for( var iElement=0; iElement<matchingElements.length, iElement+=maxArguments ) {
+						push.apply( results, matchingElements.slice(iElement, Math.min(iElement+maxArguments, matchingElements.length) );
+					}
+				} else {
+					push.apply( results, matchingElements );
+				}
 				return results;
 
 			// Speed-up: Sizzle(".CLASS")
 			} else if ( (m = match[3]) && support.getByClassName && context.getElementsByClassName ) {
-				push.apply( results, slice.call(context.getElementsByClassName( m ), 0) );
+				// Make sure we don't call Array.push with more arguments than browsers
+				// can handle, by breaking the call into palateable chunks if necessary
+				var maxArguments = 50000,
+					matchingElements = slice.call(context.getElementsByClassName( selector ), 0);
+
+				if ( matchingElements != undefined && matchingElements.length != undefined &&
+					matchingElements.length > maxArguments ) {
+					for ( var iElement=0; iElement<matchingElements.length, iElement+=maxArguments ) {
+						push.apply( results, matchingElements.slice(iElement, Math.min(iElement+maxArguments, matchingElements.length) );
+					}
+				} else {
+					push.apply( results, matchingElements );
+				}
 				return results;
 			}
 		}
